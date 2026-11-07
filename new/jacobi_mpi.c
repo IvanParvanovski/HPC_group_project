@@ -75,7 +75,7 @@ static double *jacobi(double *A, double *b, double *x,
   double b_norm = sqrt(global_b_sq);
 
   int iter;
-  for (iter = 0; iter < max_iter; iter++) {
+  for (iter = 1; iter <= max_iter; iter++) {
 
     // Calculate new values for the rows assigned to this process
     for (int i = 0; i < local_rows; i++) {
@@ -130,7 +130,7 @@ static double *jacobi(double *A, double *b, double *x,
     if (relative_error < tolerance) {
       if (rank == 0)
         printf("Solved with error %e in %d iterations.\n",
-               relative_error, iter + 1);
+               relative_error, iter);
       break;
     }
   }
@@ -139,7 +139,7 @@ static double *jacobi(double *A, double *b, double *x,
   free(local_x_new);
   free(x_new);
 
-  if (iter == max_iter && rank == 0)
+  if (iter > max_iter && rank == 0)
     printf("Solver did not converge in %d iterations.\n", max_iter);
 
   return x;
